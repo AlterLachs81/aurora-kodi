@@ -1,25 +1,23 @@
 # Aurora for Kodi
 
-Aurora is an independent Kodi add-on for navigating Netflix with Kodi's native directory interface. It includes its own category menu, search entry point, local favorites and recently started list.
+Aurora is being rewritten as a standalone Kodi Netflix add-on. The development branch is `rewrite/standalone-prototype`.
 
-## Netflix service integration
+## Development status
 
-Aurora's interface and navigation are implemented here. In version 0.3.1, Netflix catalogue data and playback are provided by the installed `plugin.video.netflix` add-on through Kodi's plugin interface. Aurora does not copy CastagnaIT's internal implementation.
+The prototype now contains Aurora-owned code for importing an `NFAuthentication.key`, storing its Netflix cookies, checking the session directly with Netflix, and requesting catalogue data. Kodi navigation no longer calls `plugin.video.netflix`.
 
-This separation means a failure in the Netflix add-on, account session, DRM or video decoder can still prevent catalogue access or playback. Replacing that service layer requires a separate Netflix authentication, MSL and DRM implementation; a new Kodi interface alone cannot fix those systems.
+The playback path is now wired in code: title selection hands the stream to Kodi InputStream Adaptive; the add-on service exposes loopback-only manifest and license callbacks; and Aurora's MSL client exchanges the Widevine challenge with Netflix. The DASH converter handles only a limited VOD manifest, rejects auxiliary ad streams, and omits subtitle tracks. **This end-to-end path has not been tested against Netflix or LibreELEC and is not known to work yet.** Treat it as a development prototype, not a playable update.
 
-## Install in Kodi
+Version 0.4.0 is available through the existing **Aurora Add-on Repository**. It is installable as a Kodi add-on, but the Netflix playback path is unverified and must be treated as experimental.
 
-1. Install `addons/repository.aurora/repository.aurora-1.0.0.zip` once via **Add-ons → Install from ZIP file**.
-2. Open **Install from repository → Aurora Add-on Repository → Video add-ons → Aurora for Netflix**.
-3. Kodi can then install and update Aurora through the repository.
+## Build the repository feed
 
-## Build the feed
-
-After changing the add-on version in `plugin.video.netflix.aurora/addon.xml`, update `PLUGIN_VERSION` in `build_repository.py`, then run:
+Build the packages and feed with:
 
 ```sh
 python3 build_repository.py --base-url https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main
 ```
 
-Commit the generated `addons.xml`, `addons.xml.md5`, and versioned ZIPs in `addons/` with the source.
+Open **Aurora Add-on Repository** in Kodi and update **Aurora for Netflix** to version 0.4.0.
+
+The automated tests mock Netflix and Kodi callbacks; neither a real MSL login nor Widevine playback on LibreELEC has been validated. A LibreELEC/Kodi 21 device and a Netflix session are still needed for that playback check.

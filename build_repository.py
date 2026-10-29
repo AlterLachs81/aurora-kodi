@@ -12,7 +12,7 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parent
 ADDONS = ROOT / "addons"
 PLUGIN_ID = "plugin.video.netflix.aurora"
-PLUGIN_VERSION = "0.3.1"
+PLUGIN_VERSION = "0.4.0"
 REPO_ID = "repository.aurora"
 REPO_VERSION = "1.0.0"
 
@@ -27,10 +27,10 @@ def archive_addon(addon_dir: Path, version: str, output_dir: Path) -> Path:
     return archive
 
 
-def repo_index(base_url: str) -> None:
+def repo_index(base_url: str, repo_id: str, repo_version: str, repo_dir: Path) -> None:
     packages = [
         (PLUGIN_ID, PLUGIN_VERSION, ROOT / PLUGIN_ID, f"{PLUGIN_ID}/{PLUGIN_ID}-{PLUGIN_VERSION}.zip"),
-        (REPO_ID, REPO_VERSION, ROOT / REPO_ID, f"{REPO_ID}/{REPO_ID}-{REPO_VERSION}.zip"),
+        (repo_id, repo_version, repo_dir, f"{repo_id}/{repo_id}-{repo_version}.zip"),
     ]
     root = ET.Element("addons")
     for addon_id, version, source_dir, relative_zip in packages:
@@ -51,11 +51,13 @@ def main() -> None:
     base = args.base_url.rstrip("/")
     if not base.startswith("https://"):
         raise SystemExit("--base-url must use HTTPS")
+    repo_id = REPO_ID
+    repo_version = REPO_VERSION
     repo_dir = ROOT / REPO_ID
     plugin_dir = ROOT / PLUGIN_ID
-    repo_zip = archive_addon(repo_dir, REPO_VERSION, ADDONS / REPO_ID)
+    repo_zip = archive_addon(repo_dir, repo_version, ADDONS / repo_id)
     archive_addon(plugin_dir, PLUGIN_VERSION, ADDONS / PLUGIN_ID)
-    repo_index(base)
+    repo_index(base, repo_id, repo_version, repo_dir)
     print(f"Repository bootstrap archive: {repo_zip.relative_to(ROOT)}")
     print(f"Feed URL: {base}/addons.xml")
 
