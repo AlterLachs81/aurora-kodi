@@ -62,3 +62,5 @@ def clear_session():
         path = os.path.join(profile, filename)
         if xbmcvfs.exists(path):
             xbmcvfs.delete(path)
+    from resources.lib.aurora.playback_state import clear as clear_playback_state
+    clear_playback_state()
