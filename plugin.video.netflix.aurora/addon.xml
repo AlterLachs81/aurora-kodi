@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.3.1" provider-name="AlterLachs81">
- <requires><import addon="xbmc.python" version="3.0.0"/></requires>
+ <requires>
+  <import addon="xbmc.python" version="3.0.0"/>
+  <import addon="script.module.pycryptodome" version="3.4.3"/>
+ </requires>
  <extension point="xbmc.python.pluginsource" library="default.py"><provides>video</provides></extension>
  <extension point="xbmc.addon.metadata"><summary lang="de_DE">Aurora: eigenständiger Netflix-Client (Entwicklung)</summary><description lang="de_DE">Entwicklungsstand des eigenständigen Aurora-Rewrites. Anmeldung und Katalognavigation werden direkt implementiert. Wiedergabe ist noch nicht verfügbar; diese Version ist nicht als Update zur Installation gedacht.</description><platform>all</platform><license>MIT</license><news>Rewrite prototype: direct session and catalogue modules; playback incomplete.</news></extension>
 </addon>
