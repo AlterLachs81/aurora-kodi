@@ -4,9 +4,11 @@ Aurora is being rewritten as a standalone Kodi Netflix add-on. The development b
 
 ## Development status
 
-The prototype now contains Aurora-owned code for importing an `NFAuthentication.key`, storing its Netflix cookies, checking the session directly with Netflix, and requesting catalogue data. The Kodi interface no longer routes catalogue or playback actions through `plugin.video.netflix`.
+The prototype now contains Aurora-owned code for importing an `NFAuthentication.key`, storing its Netflix cookies, checking the session directly with Netflix, and requesting catalogue data. Kodi navigation no longer calls `plugin.video.netflix`.
 
-Playback is not implemented yet. The prototype branch is not an installable update. The stable repository feed remains on `main` until the independent login, catalogue and playback flow is complete and checked on LibreELEC.
+An initial Kodi InputStream Adaptive hand-off for a resolved DASH manifest and Widevine license endpoint is in `resources/lib/aurora/player.py`. It is only the Kodi-facing adapter: Aurora still does not create Netflix's MSL manifest or license requests, and the adapter is not connected to title selection. A cookie session alone is not a playback implementation.
+
+The prototype branch is not an installable update. The stable repository feed remains on `main` until the independent login, catalogue and playback flow is complete and checked on LibreELEC.
 
 ## Local repository build
 
