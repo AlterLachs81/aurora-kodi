@@ -5,5 +5,6 @@
   <import addon="script.module.pycryptodome" version="3.4.3"/>
  </requires>
  <extension point="xbmc.python.pluginsource" library="default.py"><provides>video</provides></extension>
- <extension point="xbmc.addon.metadata"><summary lang="de_DE">Aurora: eigenständiger Netflix-Client (Entwicklung)</summary><description lang="de_DE">Entwicklungsstand des eigenständigen Aurora-Rewrites. Anmeldung und Katalognavigation werden direkt implementiert. Wiedergabe ist noch nicht verfügbar; diese Version ist nicht als Update zur Installation gedacht.</description><platform>all</platform><license>MIT</license><news>Rewrite prototype: direct session and catalogue modules; playback incomplete.</news></extension>
+ <extension point="xbmc.service" library="service.py" start="login"/>
+ <extension point="xbmc.addon.metadata"><summary lang="de_DE">Aurora: eigenständiger Netflix-Client (Entwicklung)</summary><description lang="de_DE">Entwicklungsstand des eigenständigen Aurora-Rewrites. Anmeldung, Katalognavigation und eine lokale MSL/Widevine-Brücke sind im Aufbau. Noch nicht auf LibreELEC getestet und nicht als Update zur Installation gedacht.</description><platform>all</platform><license>MIT</license><news>Rewrite prototype: direct catalogue access and an unverified local playback bridge.</news></extension>
 </addon>
