@@ -1,22 +1,16 @@
 # Aurora for Kodi
 
-Aurora is an independent Kodi add-on for navigating Netflix with Kodi's native directory interface. It includes its own category menu, search entry point, local favorites and recently started list.
+Aurora is being rewritten as a standalone Kodi Netflix add-on. The development branch is `rewrite/standalone-prototype`.
 
-## Netflix service integration
+## Development status
 
-Aurora's interface and navigation are implemented here. In version 0.3.1, Netflix catalogue data and playback are provided by the installed `plugin.video.netflix` add-on through Kodi's plugin interface. Aurora does not copy CastagnaIT's internal implementation.
+The prototype now contains Aurora-owned code for importing an `NFAuthentication.key`, storing its Netflix cookies, checking the session directly with Netflix, and requesting catalogue data. The Kodi interface no longer routes catalogue or playback actions through `plugin.video.netflix`.
 
-This separation means a failure in the Netflix add-on, account session, DRM or video decoder can still prevent catalogue access or playback. Replacing that service layer requires a separate Netflix authentication, MSL and DRM implementation; a new Kodi interface alone cannot fix those systems.
+Playback is not implemented yet. The prototype branch is not an installable update. The stable repository feed remains on `main` until the independent login, catalogue and playback flow is complete and checked on LibreELEC.
 
-## Install in Kodi
+## Local repository build
 
-1. Install `addons/repository.aurora/repository.aurora-1.0.0.zip` once via **Add-ons → Install from ZIP file**.
-2. Open **Install from repository → Aurora Add-on Repository → Video add-ons → Aurora for Netflix**.
-3. Kodi can then install and update Aurora through the repository.
-
-## Build the feed
-
-After changing the add-on version in `plugin.video.netflix.aurora/addon.xml`, update `PLUGIN_VERSION` in `build_repository.py`, then run:
+After a release version is ready, update the add-on version in `plugin.video.netflix.aurora/addon.xml` and `PLUGIN_VERSION` in `build_repository.py`, then run:
 
 ```sh
 python3 build_repository.py --base-url https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main
