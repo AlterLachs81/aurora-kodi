@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.3.1" provider-name="AlterLachs81">
+<addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.4.0" provider-name="AlterLachs81">
  <requires>
   <import addon="xbmc.python" version="3.0.0"/>
   <import addon="script.module.pycryptodome" version="3.4.3"/>
+  <import addon="script.module.inputstreamhelper" version="0.5.0+matrix.1"/>
  </requires>
  <extension point="xbmc.python.pluginsource" library="default.py"><provides>video</provides></extension>
- <extension point="xbmc.service" library="service.py" start="login"/>
- <extension point="xbmc.addon.metadata"><summary lang="de_DE">Aurora: eigenständiger Netflix-Client (Entwicklung)</summary><description lang="de_DE">Entwicklungsstand des eigenständigen Aurora-Rewrites. Anmeldung, Katalognavigation und eine lokale MSL/Widevine-Brücke sind im Aufbau. Noch nicht auf LibreELEC getestet und nicht als Update zur Installation gedacht.</description><platform>all</platform><license>MIT</license><news>Rewrite prototype: direct catalogue access and an unverified local playback bridge.</news></extension>
+ <extension point="xbmc.service" library="service.py"/>
+ <extension point="xbmc.addon.metadata"><summary lang="de_DE">Aurora: eigenständiger Netflix-Client (Testversion)</summary><description lang="de_DE">Eigenständiger Aurora-Teststand mit direktem Katalogzugriff und lokalem MSL/Widevine-Wiedergabepfad. Noch nicht auf LibreELEC oder mit einem Netflix-Konto getestet.</description><platform>all</platform><license>MIT</license><news>0.4.0 - Development build for testing the standalone MSL playback path.</news></extension>
 </addon>

@@ -40,6 +40,18 @@ class PlaybackError(ValueError):
     """A resolved stream cannot be handed safely to Kodi."""
 
 
+def _ensure_widevine():
+    try:
+        import inputstreamhelper
+        helper = inputstreamhelper.Helper('mpd', drm='widevine')
+        if not helper.check_inputstream():
+            raise PlaybackError('Kodi konnte InputStream Adaptive/Widevine nicht vorbereiten.')
+    except PlaybackError:
+        raise
+    except Exception as exc:
+        raise PlaybackError('InputStream Adaptive/Widevine ist nicht verfügbar: {}'.format(exc)) from exc
+
+
 def _check_http_url(value, field):
     value = str(value or '').strip()
     parsed = urlsplit(value)
@@ -98,6 +110,7 @@ def resolve_netflix(handle, entry, service_port=SERVICE_PORT):
     """Hand a title to Aurora's local MSL service and Kodi's Widevine player."""
     from secrets import token_urlsafe
 
+    _ensure_widevine()
     token = token_urlsafe(24)
     create_playback_state(token, entry)
     service_url = 'http://127.0.0.1:{}/aurora'.format(int(service_port))

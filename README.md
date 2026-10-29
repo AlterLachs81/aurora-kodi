@@ -8,14 +8,16 @@ The prototype now contains Aurora-owned code for importing an `NFAuthentication.
 
 The playback path is now wired in code: title selection hands the stream to Kodi InputStream Adaptive; the add-on service exposes loopback-only manifest and license callbacks; and Aurora's MSL client exchanges the Widevine challenge with Netflix. The DASH converter handles only a limited VOD manifest, rejects auxiliary ad streams, and omits subtitle tracks. **This end-to-end path has not been tested against Netflix or LibreELEC and is not known to work yet.** Treat it as a development prototype, not a playable update.
 
-The prototype branch is not an installable update. The stable repository feed remains on `main` until the independent login, catalogue and playback flow is complete and checked on LibreELEC.
+The prototype branch now builds an **isolated development repository**. It is installable as a Kodi add-on, but the Netflix playback path is unverified and must be treated as experimental. The stable feed on `main` remains unchanged.
 
-## Local repository build
+## Build the development feed
 
-After a release version is ready, update the add-on version in `plugin.video.netflix.aurora/addon.xml` and `PLUGIN_VERSION` in `build_repository.py`, then run:
+Build the packages and feed with:
 
 ```sh
-python3 build_repository.py --base-url https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main
+python3 build_repository.py --development --base-url https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/rewrite/standalone-prototype
 ```
 
-Commit the generated `addons.xml`, `addons.xml.md5`, and versioned ZIPs in `addons/` with the source.
+To install the candidate in Kodi, install `addons/repository.aurora.dev/repository.aurora.dev-0.1.0.zip`, then find **Aurora for Netflix** in the development repository. This candidate is version 0.4.0.
+
+The repository feed is a test channel, not a release. The automated tests mock Netflix and Kodi callbacks; neither a real MSL login nor Widevine playback on LibreELEC has been validated. A LibreELEC/Kodi 21 device and a Netflix session are still needed for that final playback check.
