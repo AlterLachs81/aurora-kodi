@@ -176,8 +176,8 @@ def _append_audio(mpd_period, track, index):
 def convert_vod_to_mpd(manifest):
     """Return UTF-8 MPD bytes for a basic Netflix VOD manifest.
 
-    Ad-supported/branching manifests and text tracks are intentionally rejected
-    or omitted until their playback and timeline handling is implemented.
+    Manifests with auxiliary ad streams are rejected. Text tracks are omitted
+    until subtitle conversion and selection are implemented.
     """
     if not isinstance(manifest, dict):
         raise ManifestError('Das Manifest hat ein ungültiges Format.')
