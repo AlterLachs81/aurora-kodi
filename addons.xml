@@ -1,20 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <addons>
-  <addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.2.0" provider-name="Independent Kodi project">
+  <addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.3.0" provider-name="AlterLachs81">
     <requires>
       <import addon="xbmc.python" version="3.0.0" />
-      <import addon="plugin.video.netflix" version="1.0.0" />
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
       <provides>video</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-      <summary lang="de_DE">Eigenständige Netflix-Oberfläche für Kodi</summary>
-      <description lang="de_DE">Visuelle Bibliothek mit Cover-Kacheln, Suche, Favoriten und Verlauf. Nutzt die vorhandene Netflix-Installation ausschließlich für Katalog und Wiedergabe.</description>
+      <summary lang="de_DE">Aurora: Netflix-Navigation für Kodi</summary>
+      <description lang="de_DE">Eigenständige Kodi-Navigation mit Kategorien, Suche, Aurora-Favoriten und Verlauf. Für Netflix-Katalog und Wiedergabe wird aktuell das installierte Netflix-Add-on als Brücke verwendet.</description>
       <platform>all</platform>
       <license>MIT</license>
     </extension>
-    <zip url="https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons/plugin.video.netflix.aurora/plugin.video.netflix.aurora-0.2.0.zip" />
+    <zip url="https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons/plugin.video.netflix.aurora/plugin.video.netflix.aurora-0.3.0.zip" />
   </addon>
   <addon id="repository.aurora" name="Aurora Add-on Repository" version="1.0.0" provider-name="AlterLachs81">
     <requires>

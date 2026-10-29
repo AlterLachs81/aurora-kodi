@@ -12,7 +12,7 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parent
 ADDONS = ROOT / "addons"
 PLUGIN_ID = "plugin.video.netflix.aurora"
-PLUGIN_VERSION = "0.2.0"
+PLUGIN_VERSION = "0.3.0"
 REPO_ID = "repository.aurora"
 REPO_VERSION = "1.0.0"
 
