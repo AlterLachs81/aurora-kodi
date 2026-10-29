@@ -56,6 +56,9 @@ def msl_user_auth_data(cookies=None):
 
 
 def clear_session():
-    path = _session_path()
-    if xbmcvfs.exists(path):
-        xbmcvfs.delete(path)
+    import xbmcaddon
+    profile = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo('profile'))
+    for filename in ('netflix_session.json', 'msl_session.json'):
+        path = os.path.join(profile, filename)
+        if xbmcvfs.exists(path):
+            xbmcvfs.delete(path)
