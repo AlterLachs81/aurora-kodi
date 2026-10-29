@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<addons>
+  <addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.2.0" provider-name="Independent Kodi project">
+    <requires>
+      <import addon="xbmc.python" version="3.0.0" />
+      <import addon="plugin.video.netflix" version="1.0.0" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+      <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+      <summary lang="de_DE">Eigenständige Netflix-Oberfläche für Kodi</summary>
+      <description lang="de_DE">Visuelle Bibliothek mit Cover-Kacheln, Suche, Favoriten und Verlauf. Nutzt die vorhandene Netflix-Installation ausschließlich für Katalog und Wiedergabe.</description>
+      <platform>all</platform>
+      <license>MIT</license>
+    </extension>
+    <zip url="https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons/plugin.video.netflix.aurora/plugin.video.netflix.aurora-0.2.0.zip" />
+  </addon>
+  <addon id="repository.aurora" name="Aurora Add-on Repository" version="1.0.0" provider-name="AlterLachs81">
+    <requires>
+      <import addon="xbmc.python" version="3.0.0" />
+    </requires>
+    <extension point="xbmc.addon.repository" name="Aurora Add-on Repository">
+      <dir>
+        <info>https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons.xml</info>
+        <checksum>https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons.xml.md5</checksum>
+        <datadir zip="true">https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons/</datadir>
+      </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+      <summary lang="de_DE">Aurora Repository</summary>
+      <description lang="de_DE">Installiert und aktualisiert Aurora for Netflix über Kodi.</description>
+      <platform>all</platform>
+      <license>MIT</license>
+    </extension>
+    <zip url="https://raw.githubusercontent.com/AlterLachs81/aurora-kodi/main/addons/repository.aurora/repository.aurora-1.0.0.zip" />
+  </addon>
+</addons>

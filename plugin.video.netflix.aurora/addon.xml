@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.netflix.aurora" name="Aurora for Netflix" version="0.2.0" provider-name="Independent Kodi project">
+ <requires><import addon="xbmc.python" version="3.0.0"/><import addon="plugin.video.netflix" version="1.0.0"/></requires>
+ <extension point="xbmc.python.pluginsource" library="default.py"><provides>video</provides></extension>
+ <extension point="xbmc.addon.metadata"><summary lang="de_DE">Eigenständige Netflix-Oberfläche für Kodi</summary><description lang="de_DE">Visuelle Bibliothek mit Cover-Kacheln, Suche, Favoriten und Verlauf. Nutzt die vorhandene Netflix-Installation ausschließlich für Katalog und Wiedergabe.</description><platform>all</platform><license>MIT</license></extension>
+</addon>
