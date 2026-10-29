@@ -36,6 +36,7 @@ except ImportError:
 
 
 MANIFEST_ENDPOINT = 'https://www.netflix.com/msl/playapi/cadmium/licensedmanifest/1'
+LICENSE_ENDPOINT = 'https://www.netflix.com/nq/msl_v1/cadmium/pbo_licenses/%5E1.0.0/router'
 
 
 class MSLRequestError(RuntimeError):
@@ -252,6 +253,46 @@ class MSLClient:
         )
         return self.request(manifest_endpoint(self.client_info), data), xid
 
+    def licensed_video_response(self, manifest, license_data, xid):
+        """Exchange Kodi's Widevine challenge for the MSL-wrapped license response."""
+        if isinstance(license_data, bytes):
+            license_data = license_data.decode('utf-8')
+        try:
+            challenge, encoded_session_id = str(license_data).split('!', 1)
+            session_id = base64.b64decode(encoded_session_id).decode('utf-8')
+            license_href = manifest['links']['license']['href']
+        except (KeyError, TypeError, ValueError) as exc:
+            raise MSLRequestError('Widevine-Challenge oder Netflix-Lizenzadresse ist ungültig.') from exc
+        required = ('client_version', 'browser_info_version', 'os_name', 'os_version')
+        if any(not self.client_info.get(key) for key in required):
+            raise MSLRequestError('Netflix lieferte unvollständige Daten für die Lizenzabfrage.')
+        params = [{
+            'drmSessionId': session_id,
+            'clientTime': int(time.time()),
+            'challengeBase64': challenge,
+            'xid': str(xid),
+            'clientVersion': self.client_info['client_version'],
+            'platform': self.client_info['browser_info_version'],
+            'osVersion': self.client_info['os_version'],
+            'osName': self.client_info['os_name'],
+        }]
+        data = {
+            'version': 2,
+            'url': license_href,
+            'id': int(time.time() * 100000000),
+            'languages': [self.language],
+            'params': params,
+            'echo': 'drmSessionId',
+        }
+        endpoint = _request_endpoint(LICENSE_ENDPOINT, self.client_info, 'license')
+        response = self.request(endpoint, data)
+        if not isinstance(response, list) or not response or 'licenseResponseBase64' not in response[0]:
+            raise MSLRequestError('Netflix lieferte keine gültige Widevine-Lizenzantwort.')
+        try:
+            return base64.b64decode(response[0]['licenseResponseBase64'])
+        except (ValueError, TypeError) as exc:
+            raise MSLRequestError('Netflix-Lizenzantwort war nicht gültig kodiert.') from exc
+
     def request(self, endpoint, request_data):
         """Send one MSL request and return its decoded JSON response."""
         if (not self.crypto.mastertoken or not self.crypto.encryption_key or
@@ -337,11 +378,15 @@ class MSLClient:
             raise MSLRequestError('Netflix-MSL-Nutzdaten sind kein gültiges JSON.') from exc
         _raise_msl_error(result)
         self._save_state()
-        return result
+        return result.get('result') if isinstance(result, dict) and 'result' in result else result
 
 
 def manifest_endpoint(client_info, request_name='prefetch/licensedManifest'):
     """Build the current Netflix licensed-manifest MSL endpoint URL."""
+    return _request_endpoint(MANIFEST_ENDPOINT, client_info, request_name)
+
+
+def _request_endpoint(base_url, client_info, request_name):
     required = ('build_identifier', 'browser_info_version', 'os_name', 'os_version')
     if not isinstance(client_info, dict) or any(not client_info.get(key) for key in required):
         raise MSLRequestError('Netflix lieferte unvollständige Browserdaten für MSL.')
@@ -355,7 +400,7 @@ def manifest_endpoint(client_info, request_name='prefetch/licensedManifest'):
         ('osname', str(client_info['os_name']).lower()),
         ('osversion', str(client_info['os_version'])),
     ]
-    return MANIFEST_ENDPOINT + '?' + urlencode(params)
+    return base_url + '?' + urlencode(params)
 
 
 def manifest_request_data(video_id, profiles, challenge, session_id, language='en-US', xid=None,
