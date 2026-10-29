@@ -228,39 +228,41 @@ def _show_backend_list(path, title, offset=0):
         _add_message('Netflix-Liste nicht abrufbar', str(exc))
         _finish(title, succeeded=False)
         return
-    _show_entries(title, entries, offset)
+    _show_entries(title, entries, offset, source_path=path)
 
 
-def _show_entries(title, entries, offset=0):
+def _show_entries(title, entries, offset=0, source_path=None):
     page_size = 40
     offset = max(0, int(offset))
     page = entries[offset:offset + page_size]
     for entry in page:
         _add_entry(entry)
+    local_section = {'Aurora-Favoriten': 'favorites', 'Zuletzt gestartet': 'recent'}.get(title)
     if offset:
         previous = xbmcgui.ListItem(label='← Vorherige Seite')
-        xbmcplugin.addDirectoryItem(
-            HANDLE,
-            _url(action='browse_local' if title in ('Aurora-Favoriten', 'Zuletzt gestartet') else 'browse',
-                 section='favorites' if title == 'Aurora-Favoriten' else 'recent',
-                 path='' if title in ('Aurora-Favoriten', 'Zuletzt gestartet') else _query().get('path', ''),
-                 title=title, offset=max(0, offset - page_size)),
-            previous,
-            isFolder=True,
-        )
+        if local_section:
+            previous_url = _url(action='browse_local', section=local_section, title=title,
+                                offset=max(0, offset - page_size))
+        else:
+            previous_url = _url(action='browse', path=source_path or _query().get('path', ''),
+                                title=title, offset=max(0, offset - page_size))
+        xbmcplugin.addDirectoryItem(HANDLE, previous_url, previous, isFolder=True)
     if offset + page_size < len(entries):
         next_item = xbmcgui.ListItem(label='Nächste Seite →')
-        if title in ('Aurora-Favoriten', 'Zuletzt gestartet'):
+        if local_section:
             next_params = {
                 'action': 'browse_local',
-                'section': 'favorites' if title == 'Aurora-Favoriten' else 'recent',
+                'section': local_section,
                 'title': title,
                 'offset': offset + page_size,
             }
         else:
-            next_params = dict(_query())
-            next_params['action'] = 'browse'
-            next_params['offset'] = offset + page_size
+            next_params = {
+                'action': 'browse',
+                'path': source_path or _query().get('path', ''),
+                'title': title,
+                'offset': offset + page_size,
+            }
         xbmcplugin.addDirectoryItem(HANDLE, BASE + '?' + urlencode(next_params), next_item, isFolder=True)
     _finish(title)
 
@@ -318,7 +320,9 @@ def _dispatch(params):
         entry = _decode_entry(params['entry'])
         _remember(entry)
         target = params.get('path') or entry.get('path', '')
-        xbmc.executebuiltin('PlayMedia({})'.format(json.dumps(target)))
+        item = xbmcgui.ListItem(path=target)
+        item.setProperty('IsPlayable', 'true')
+        xbmcplugin.setResolvedUrl(HANDLE, True, item)
     elif action == 'toggle_favorite':
         _toggle_favorite(params['entry'])
     elif action == 'open_backend':

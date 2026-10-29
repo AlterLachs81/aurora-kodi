@@ -4,7 +4,7 @@ Aurora is an independent Kodi add-on for navigating Netflix with Kodi's native d
 
 ## Netflix service integration
 
-Aurora's interface and navigation are implemented here. In version 0.3.0, Netflix catalogue data and playback are provided by the installed `plugin.video.netflix` add-on through Kodi's plugin interface. Aurora does not copy CastagnaIT's internal implementation.
+Aurora's interface and navigation are implemented here. In version 0.3.1, Netflix catalogue data and playback are provided by the installed `plugin.video.netflix` add-on through Kodi's plugin interface. Aurora does not copy CastagnaIT's internal implementation.
 
 This separation means a failure in the Netflix add-on, account session, DRM or video decoder can still prevent catalogue access or playback. Replacing that service layer requires a separate Netflix authentication, MSL and DRM implementation; a new Kodi interface alone cannot fix those systems.
 
