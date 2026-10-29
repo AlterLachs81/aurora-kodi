@@ -56,6 +56,9 @@ class NetflixClient:
         self.api_url = None
         self.auth_url = None
         self.user_guid = None
+        self.esn = None
+        self.preferred_locale = None
+        self.client_info = {}
 
     def check_session(self):
         try:
@@ -89,6 +92,24 @@ class NetflixClient:
             raise NetflixConnectionError('Netflix meldet keine aktive Mitgliedschaft für diese Sitzung.')
         self.auth_url = _unwrap(user.get('authURL'))
         self.user_guid = _unwrap(user.get('userGuid'))
+        self.esn = _unwrap(_value_at(react_context, ('models', 'esnAccessor', 'data', 'esn')))
+        locale = _value_at(react_context, ('models', 'geo', 'data', 'preferredLocale'))
+        self.preferred_locale = locale.get('id') if isinstance(locale, dict) else None
+        client_info = {
+            'build_identifier': _value_at(react_context, ('models', 'serverDefs', 'data', 'BUILD_IDENTIFIER')),
+            'ui_version': _value_at(react_context, ('models', 'playerModel', 'data', 'config', 'ui', 'initParams', 'uiVersion')),
+            'asset_core': _value_at(react_context, ('models', 'playerModel', 'data', 'config', 'core', 'assets', 'core')),
+            'browser_info_version': _value_at(react_context, ('models', 'playerModel', 'data', 'config', 'core', 'initParams', 'browserInfo', 'version')),
+            'os_name': _value_at(react_context, ('models', 'playerModel', 'data', 'config', 'core', 'initParams', 'browserInfo', 'os', 'name')),
+            'os_version': _value_at(react_context, ('models', 'playerModel', 'data', 'config', 'core', 'initParams', 'browserInfo', 'os', 'version')),
+        }
+        asset_core = client_info.pop('asset_core')
+        if isinstance(asset_core, str):
+            match = re.search(r'-([0-9.]+)\.js(?:[?#].*)?$', asset_core)
+            client_info['client_version'] = match.group(1) if match else None
+        else:
+            client_info['client_version'] = None
+        self.client_info = client_info
         member_api = _unwrap(_value_at(react_context, ('models', 'services', 'data', 'memberapi')))
         if isinstance(member_api, dict):
             protocol = member_api.get('protocol', 'https')
