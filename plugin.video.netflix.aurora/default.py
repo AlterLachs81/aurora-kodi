@@ -17,6 +17,7 @@ from resources.lib.aurora.catalog import (
     episodes, home_sections, search as search_videos, seasons, videos,
 )
 from resources.lib.aurora.netflix_client import NetflixClient, NetflixConnectionError
+from resources.lib.aurora.player import resolve_netflix
 from resources.lib.aurora.session import clear_session, load_cookies, save_cookies
 
 
@@ -95,15 +96,17 @@ def _add_entry(entry):
     item = xbmcgui.ListItem(label=entry['label'])
     _set_video_info(item, entry)
     item.addContextMenuItems(_favorite_context(entry))
-    item.setProperty('IsPlayable', 'false')
     if entry.get('type') == 'show':
+        item.setProperty('IsPlayable', 'false')
         item_url = _url(action='browse_seasons', show_id=entry['id'], title=entry['label'])
         is_folder = True
     elif entry.get('type') == 'season':
+        item.setProperty('IsPlayable', 'false')
         item_url = _url(action='browse_episodes', season_id=entry['id'], title=entry['label'])
         is_folder = True
     else:
-        item_url = _url(action='title_info', entry=_encode_entry(entry))
+        item.setProperty('IsPlayable', 'true')
+        item_url = _url(action='play', entry=_encode_entry(entry))
         is_folder = False
     xbmcplugin.addDirectoryItem(
         HANDLE,
@@ -313,6 +316,8 @@ def _dispatch(params):
         show_home()
     elif action == 'toggle_favorite':
         _toggle_favorite(params['entry'])
+    elif action == 'play':
+        resolve_netflix(HANDLE, _decode_entry(params['entry']))
     elif action == 'title_info':
         entry = _decode_entry(params['entry'])
         xbmcgui.Dialog().ok(entry['label'], entry.get('plot') or 'Weitere Titelinformationen sind noch nicht verfügbar.')
